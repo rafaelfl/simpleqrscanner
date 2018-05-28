@@ -242,7 +242,7 @@ cr.plugins_.SimpleQRScanner = function(runtime)
 			function (result) {
 				var inst = self;
 
-				//alert("Scanned: " + typeof(result) + "\n" + result);
+				alert("Scanned: " + typeof(result) + "\n" + result);
 
 				// Cocoon.io was giving error when using JSON object...
 				// var myres = JSON.parse(result);
@@ -251,16 +251,23 @@ cr.plugins_.SimpleQRScanner = function(runtime)
 				// Dealing with the string manually... :(
 				//
 				var myresg = result.toString().replace("{", "").replace("}", "").trim();
-				//alert(myresg);
+				alert(myresg);
 				var lines = myresg.split(",");
+				var line1 = "", line2 = "";
 
-				var line1 = lines[0]; // first line (resultCode)
-				//alert(line1);
+				if (lines[0].search("resultCode") > -1) {
+					line1 = lines[0]; // first line (resultCode)
+					line2 = lines[1]; // second line (result)
+				} else {
+					line1 = lines[1]; // first line (result)
+					line2 = lines[0]; // second line (resultCode)
+				}
+
+				alert(line1);
 				var resultCode = parseInt(line1.split(":")[1]);
-				//alert(resultCode);
-
-				var line2 = lines[1]; // second line (result)
-				//alert(line2);
+				alert(resultCode);
+				
+				alert(line2);
 				var myresvet = line2.split(":");
 				var myresquot = "";
 
@@ -273,7 +280,7 @@ cr.plugins_.SimpleQRScanner = function(runtime)
 				}
 				var myres = myresquot.substr(1, myresquot.length-2).replace("\\", "");
 
-				//alert(myres);
+				alert(myres);
 
 				inst.result = myres;
 
