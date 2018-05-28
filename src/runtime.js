@@ -242,7 +242,7 @@ cr.plugins_.SimpleQRScanner = function(runtime)
 			function (result) {
 				var inst = self;
 
-				alert("Scanned: " + typeof(result) + "\n" + result);
+				//alert("Scanned: " + typeof(result) + "\n" + result);
 
 				// Cocoon.io was giving error when using JSON object...
 				// var myres = JSON.parse(result);
@@ -251,24 +251,24 @@ cr.plugins_.SimpleQRScanner = function(runtime)
 				// Dealing with the string manually... :(
 				//
 				var myresg = result.toString().replace("{", "").replace("}", "").trim();
-				alert(myresg);
+				//alert(myresg);
 				var lines = myresg.split(",");
-				var line1 = "", line2 = "";
+				var line_resultCode = "", line_result = "";
 
 				if (lines[0].search("resultCode") > -1) {
-					line1 = lines[0]; // first line (resultCode)
-					line2 = lines[1]; // second line (result)
+					line_resultCode = lines[0]; // first line (resultCode)
+					line_result = lines[1]; // second line (result)
 				} else {
-					line1 = lines[1]; // first line (result)
-					line2 = lines[0]; // second line (resultCode)
+					line_result = lines[0]; // second line (resultCode)
+					line_resultCode = lines[1]; // first line (result)
 				}
 
-				alert(line1);
-				var resultCode = parseInt(line1.split(":")[1]);
-				alert(resultCode);
+				//alert(line_resultCode);
+				var resultCode = parseInt(line_resultCode.split(":")[1]);
+				//alert(resultCode);
 				
-				alert(line2);
-				var myresvet = line2.split(":");
+				//alert(line_result);
+				var myresvet = line_result.split(":");
 				var myresquot = "";
 
 				for (i = 1; i < myresvet.length; i++) {
@@ -280,7 +280,7 @@ cr.plugins_.SimpleQRScanner = function(runtime)
 				}
 				var myres = myresquot.substr(1, myresquot.length-2).replace("\\", "");
 
-				alert(myres);
+				//alert(myres);
 
 				inst.result = myres;
 
@@ -300,17 +300,33 @@ cr.plugins_.SimpleQRScanner = function(runtime)
 				var myresg = error.toString().replace("{", "").replace("}", "").trim();
 				//alert(myresg);
 				var lines = myresg.split(",");
+				var line_resultCode = "", line_result = "";
 
-				var line1 = lines[0]; // first line (resultCode)
-				//alert(line1);
-				var resultCode = parseInt(line1.split(":")[1]);
-				//alert(resultCode + " // " + typeof(resultCode));
+				if (lines[0].search("resultCode") > -1) {
+					line_resultCode = lines[0]; // first line (resultCode)
+					line_result = lines[1]; // second line (result)
+				} else {
+					line_result = lines[0]; // first line (result)
+					line_resultCode = lines[1]; // second line (resultCode)
+				}
 
-				var line2 = lines[1]; // second line (result)
-				//alert(line2);
-				var myresquot = line2.split(":")[1];
-				var myres = myresquot.substr(1, myresquot.length-2);
-				//alert(myres);
+				//alert(line_resultCode);
+				var resultCode = parseInt(line_resultCode.split(":")[1]);
+				//alert(resultCode);
+				
+				//alert(line_result);
+				var myresvet = line_result.split(":");
+				var myresquot = "";
+
+				for (i = 1; i < myresvet.length; i++) {
+					myresquot += myresvet[i].trim();
+
+					if (i < myresvet.length-1) {
+						myresquot += ":";
+					}
+				}
+				var myres = myresquot.substr(1, myresquot.length-2).replace("\\", "");
+
 
 				var errorCode = resultCode;
 
