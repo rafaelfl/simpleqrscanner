@@ -1,6 +1,6 @@
 # simpleqrscanner
-==============
-Simple QR Code scanner plugin for Construct 2.
+
+##Simple QR Code scanner plugin for Construct 2.
 
 In the capx folder, an example of use is provided. The plugin is very simple: three kinds of events are available (success, cancel and error), and one action (decode).
 
