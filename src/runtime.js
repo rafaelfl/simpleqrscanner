@@ -59,6 +59,11 @@ cr.plugins_.SimpleQRScanner = function(runtime)
 		
 		this.result = "";
 
+		var props = this.properties;
+
+		this.scanTitle = props[0];
+		this.scanDesc = props[1];
+
 		//var plugin = this;
 		
 		//qrcode.callback = read;
@@ -167,6 +172,20 @@ cr.plugins_.SimpleQRScanner = function(runtime)
 		//C
 		return true;
 	};
+
+	cnds.onDecodeError = function ()
+	{
+		// ... see other behaviors for example implementations ...
+		//C
+		return true;
+	};
+
+	cnds.onDecodeCancel = function ()
+	{
+		// ... see other behaviors for example implementations ...
+		//C
+		return true;
+	};
 	
 	//////////////////////////////////////
 	// Actions
@@ -185,7 +204,121 @@ cr.plugins_.SimpleQRScanner = function(runtime)
 	{
 		var self = this;
 
-		cordova.plugins.barcodeScanner.scan(
+		/**
+		* 
+		* callback:
+		{
+			"resultCode": "Int",              //(0: unknown; 1: success; 2: error; 3: cancel)
+			"result": "String"            //( QR code(success); reason(error); cancel(cancel) )
+		}
+		*/
+		cordova.plugins.gizscanqrcode.scan(
+			{
+			"baseColor": "#4e8dec",
+
+			//bar
+			"title": self.scanTitle,
+			"barColor": "4e8dec",
+			"statusBarColor": "white",
+
+			//describe string
+			"describe": self.scanDesc,
+			"describeFontSize": "15",
+			"describeLineSpacing": "8",
+			"describeColor": "ffffff",
+
+			//scan border
+			"borderColor": "4e8dec",
+			"borderScale": "0.6",              //(0.1 ~ 1)
+
+			//choose photo button
+			"choosePhotoEnable": "false",
+			"choosePhotoBtnTitle": "Photo",
+			"choosePhotoBtnColor": "4e8dec",
+
+			//flashlight
+			"flashlightEnable": "true"
+			},
+			function (result) {
+				var inst = self;
+
+				//alert("Scanned: " + typeof(result) + "\n" + result);
+
+				// Cocoon.io was giving error when using JSON object...
+				// var myres = JSON.parse(result);
+			
+				//
+				// Dealing with the string manually... :(
+				//
+				var myresg = result.toString().replace("{", "").replace("}", "").trim();
+				//alert(myresg);
+				var lines = myresg.split(",");
+
+				var line1 = lines[0]; // first line (resultCode)
+				//alert(line1);
+				var resultCode = parseInt(line1.split(":")[1]);
+				//alert(resultCode);
+
+				var line2 = lines[1]; // second line (result)
+				//alert(line2);
+				var myresvet = line2.split(":");
+				var myresquot = "";
+
+				for (i = 1; i < myresvet.length; i++) {
+					myresquot += myresvet[i].trim();
+
+					if (i < myresvet.length-1) {
+						myresquot += ":";
+					}
+				}
+				var myres = myresquot.substr(1, myresquot.length-2).replace("\\", "");
+
+				//alert(myres);
+
+				inst.result = myres;
+
+				self.runtime.trigger(cr.plugins_.SimpleQRScanner.prototype.cnds.onDecoded, inst);
+			},
+			function (error) {
+				var inst = self;
+
+				//alert("Error: " + error);
+
+				// Cocoon.io was giving error when using JSON object...
+				// var myres = JSON.parse(result);
+			
+				//
+				// Dealing with the string manually... :(
+				//
+				var myresg = error.toString().replace("{", "").replace("}", "").trim();
+				//alert(myresg);
+				var lines = myresg.split(",");
+
+				var line1 = lines[0]; // first line (resultCode)
+				//alert(line1);
+				var resultCode = parseInt(line1.split(":")[1]);
+				//alert(resultCode + " // " + typeof(resultCode));
+
+				var line2 = lines[1]; // second line (result)
+				//alert(line2);
+				var myresquot = line2.split(":")[1];
+				var myres = myresquot.substr(1, myresquot.length-2);
+				//alert(myres);
+
+				var errorCode = resultCode;
+
+				inst.result = "";
+
+				//alert("Error: " + errorCode);
+				if (errorCode == 0 || errorCode == 2) {
+					self.runtime.trigger(cr.plugins_.SimpleQRScanner.prototype.cnds.onDecodeError, inst);
+				} else if (errorCode == 3) {
+					self.runtime.trigger(cr.plugins_.SimpleQRScanner.prototype.cnds.onDecodeCancel, inst);
+				}
+			}
+		);
+
+		/*cordova.plugins.barcodeScanner.scan(
 			function (result) {
 				var inst = self;
 
@@ -216,7 +349,7 @@ cr.plugins_.SimpleQRScanner = function(runtime)
 				disableAnimations : false, // iOS
 				disableSuccessBeep: false // iOS and Android
 			}
-		 );
+		 );*/
 
 	};
 

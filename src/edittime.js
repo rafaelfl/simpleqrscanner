@@ -5,7 +5,7 @@
 		"id":			"SimpleQRScanner",				// this is used to identify this plugin and is saved to the project; never change it
 		"version":		"1.0",					// (float in x.y format) Plugin version - C2 shows compatibility warnings based on this
 		"description":	"Plugin to call a native QRCode scanner",
-		"author":		"Rafael Fernandes Lopes/ImaginaKIDS",
+		"author":		"Rafael Fernandes Lopes (rafaelf@imaginakids.com.br)",
 		"help url":		"http://www.imaginakids.com.br/",
 		"category":		"General",				// Prefer to re-use existing categories, but you can set anything here
 		"type":			"object",				// either "world" (appears in layout and is drawn), else "object"
@@ -57,7 +57,9 @@
 // example				
 //AddNumberParam("Number", "Enter a number to test if positive.");
 //AddCondition(0, cf_none, "Is number positive", "My category", "{0} is positive", "Description for my condition!", "MyCondition");
-AddCondition(0, cf_trigger, "QR Decoded", "QR Code", "QR Code has been decoded", "QR Code has been decoded", "onDecoded");
+AddCondition(0, cf_trigger, "QR Decoded Success", "QR Code", "QR Code has been decoded", "QR Code has been decoded", "onDecoded");
+AddCondition(1, cf_trigger, "QR Decoded Error", "QR Code", "Error decoding the QR Code", "Error decoding the QR Code", "onDecodeError");
+AddCondition(2, cf_trigger, "QR Decoded Cancel", "QR Code", "QR Code decoding was cancelled", "QR Code decoding was cancelled", "onDecodeCancel");
 
 ////////////////////////////////////////
 // Actions
@@ -108,6 +110,8 @@ ACESDone();
 
 var property_list = [
 	//new cr.Property(ept_integer, 	"My property",		77,		"An example property.")
+	new cr.Property(ept_text, "Title", "SimpleQRScanner", "Title text when scanning."),
+	new cr.Property(ept_text, "Description", "Align the QR Code in the viewfinder", "Description text when scanning.")
 	];
 	
 // Called by IDE when a new object type is to be created
