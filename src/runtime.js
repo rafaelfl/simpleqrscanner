@@ -327,7 +327,6 @@ cr.plugins_.SimpleQRScanner = function(runtime)
 				}
 				var myres = myresquot.substr(1, myresquot.length-2).replace("\\", "");
 
-
 				var errorCode = resultCode;
 
 				inst.result = "";
