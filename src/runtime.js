@@ -287,6 +287,7 @@ cr.plugins_.SimpleQRScanner = function(runtime)
 				var errorCode = resultCode;
 
 				if (errorCode == 3) {
+					inst.result = "";
 					self.runtime.trigger(cr.plugins_.SimpleQRScanner.prototype.cnds.onDecodeCancel, inst);
 				} else {
 					self.runtime.trigger(cr.plugins_.SimpleQRScanner.prototype.cnds.onDecoded, inst);
