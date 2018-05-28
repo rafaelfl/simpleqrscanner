@@ -8,6 +8,6 @@ This Construct 2 plugin uses the gizscanqrcode Cordova plugin. That plugin is av
 
 If you are using the Cocoon.io, just add it to your plugins list, or add `<plugin name="https://github.com/rafaelfl/cordova-gizwits-scan-qrcode.git" spec="https://github.com/rafaelfl/cordova-gizwits-scan-qrcode.git"/>` to your `config.xml`.
 
-It's really simple! Enloy it! :)
+It's really simple! Enjoy it! :)
 
 If you liked the plugin, or even you you have a suggestion (ou a bug correction >.<), send me an email!
